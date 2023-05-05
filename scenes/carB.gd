@@ -127,6 +127,10 @@ func _physics_process(delta):
 			prev_velocity = velocity
 			velocity = move_and_slide(velocity)
 			
+			print("V: " + str(velocity))
+			print("A: " + str(acceleration))
+			print("D: " + str(rotation_degrees))
+			
 			if get_slide_count() > 0 and prev_velocity.length() > explode_speed:
 				explode()
 
