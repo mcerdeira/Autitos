@@ -1,6 +1,17 @@
 extends Node2D
-var tim = 0.0
+var ttl = 0.2
 
+func _ready():
+	$lbl_winner.visible = false
+	$Label2.text = "LAPS: " + str(Global.TOTAL_LAPS)
+	
 func _physics_process(delta):
-	tim += 1.0 * delta
-	$Label2/Timer.text = str(tim).pad_decimals(1)
+	if ttl > 0:
+		ttl -= 1 * delta
+		if ttl >= 0:
+			$Label2/Semaphore.playing = true
+
+func _on_Semaphore_animation_finished():
+	$Label2/Semaphore.playing = false
+	$Label2/Semaphore.visible = false
+	Global.STARTED = true
