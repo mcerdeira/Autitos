@@ -6,6 +6,8 @@ var inactive_time = 0
 var rotation_speed_boost = 160
 var rotation_speed_original = 100
 var rotation_speed = rotation_speed_original
+var drifting_time = 0
+var drifting_time_total = 0.6
 
 var engine_power = 650
 var engine_boost = 0
@@ -48,6 +50,7 @@ func respawn():
 	boosts = 0
 	
 func explode():
+	Global.play_sound(Global.explosion)
 	boosts = 0
 	acceleration = Vector2.ZERO
 	velocity = Vector2.ZERO
@@ -56,20 +59,34 @@ func explode():
 	$sprite.playing = true
 	$TrailParticles.emitting = false
 
-func apply_friction():
+func apply_friction(debuff = 0):
 	if velocity.length() < 5:
 		velocity = Vector2.ZERO
-	var friction_force = velocity * friction
+	var friction_force = velocity * (friction - debuff)
 	var drag_force = velocity * velocity.length() * drag
 	if velocity.length() < 100:
 		friction_force *= 3
 	acceleration += drag_force + friction_force
 	
-func trail_visible(_visible):
-	if _visible:
+func trail_visible(_visible, normalbrake = true):
+	if _visible and !normalbrake:
+		Global.play_sound(Global.boost_snd)
 		boosts = 1
 	$Trail_Point1/Trail.restart(_visible)
 	$Trail_Point2/Trail.restart(_visible)
+	
+func drifting():
+	if Input.is_action_pressed("right") or Input.is_action_pressed("left"):
+		if velocity.length() > 250 and Input.is_action_pressed("acelerate") and Input.is_action_pressed("brake"):
+			return true
+			
+	return false
+	
+func just_stoped_drifting():
+		if Input.is_action_just_released("right") or Input.is_action_just_released("left") or Input.is_action_just_released("acelerate") or Input.is_action_just_released("brake"):
+			return true
+		else:
+			return false
 
 func _physics_process(delta):
 	if Global.STARTED:
@@ -105,7 +122,21 @@ func _physics_process(delta):
 			if boosts > 0 and engine_boost <= 0 and Input.is_action_just_pressed("boost"):
 				engine_boost = engine_boost_total
 				boosts -= 1
-			
+				
+			if drifting():
+				drifting_time += 1 * delta
+			else:
+				drifting_time = 0
+				
+			if just_stoped_drifting():
+				drifting_time = 0
+				
+			if drifting_time > drifting_time_total:
+				Global.play_sound(Global.drift_snd)
+				trail_visible(true, false)
+			else:
+				trail_visible(false)
+				
 			if Input.is_action_pressed("right"):
 				rotation_degrees += rotation_speed * delta
 			if Input.is_action_pressed("left"):
@@ -115,22 +146,22 @@ func _physics_process(delta):
 				acceleration = transform.x * (engine_power + engine_boost)
 				
 			if Input.is_action_pressed("brake"):
-				trail_visible(true)
-				apply_friction()
-				apply_friction()
-			else:
-				trail_visible(false)
-
+				if drifting_time <= 0:
+					#double friction by braking
+					apply_friction()
+					apply_friction()
+					if velocity.length() > 250:
+						Global.play_sound(Global.drift_snd)
+				else:
+					apply_friction(-0.2)
+					
+			#normal friction
 			apply_friction()
 
 			velocity += acceleration * delta
 			prev_velocity = velocity
 			velocity = move_and_slide(velocity)
-			
-			print("V: " + str(velocity))
-			print("A: " + str(acceleration))
-			print("D: " + str(rotation_degrees))
-			
+		
 			if get_slide_count() > 0 and prev_velocity.length() > explode_speed:
 				explode()
 
