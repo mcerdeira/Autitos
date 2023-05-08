@@ -6,6 +6,11 @@ var CAR_NAME3 = ""
 var CAR_NAME4 = ""
 var TOTAL_LAPS = 7
 var winner_label = null
+var one = null
+var two = null
+var three = null
+var four = null
+var engine = null
 var bip_low = null
 var bip_low2 = null
 var bip_high = null
@@ -13,6 +18,7 @@ var explosion = null
 var boost_snd = null
 var drift_snd = null
 var MainTheme = null
+var you_win = null
 var PlayersJoined = 0
 var players = []
 
@@ -26,6 +32,7 @@ func _input(event):
 			OS.window_fullscreen = !OS.window_fullscreen
 
 func end_race(car_name, color):
+	Global.play_sound(Global.you_win)
 	winner_label.text =  car_name + " WINNER!!"
 	winner_label.add_color_override("font_color", color)
 	winner_label.visible = true
@@ -41,6 +48,12 @@ func loadSfx():
 	boost_snd = preload("res://sfx/boost.wav")
 	drift_snd = preload("res://sfx/drift.wav")
 	MainTheme = preload("res://music/MainTheme.mp3")
+	you_win = preload("res://sfx/you_win.ogg")
+	one = preload("res://sfx/1.ogg")
+	two = preload("res://sfx/2.ogg")
+	three = preload("res://sfx/3.ogg")
+	four = preload("res://sfx/4.ogg")
+	engine = preload("res://sfx/engine.wav")
 
 func play_sound(stream: AudioStream, options:= {}) -> AudioStreamPlayer:
 	var audio_stream_player = AudioStreamPlayer.new()

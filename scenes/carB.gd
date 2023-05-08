@@ -8,6 +8,8 @@ var rotation_speed_original = 100
 var rotation_speed = rotation_speed_original
 var drifting_time = 0
 var drifting_time_total = 0.6
+var pitch = 0
+var pitch_max = 2.3
 
 var engine_power = 650
 var engine_boost = 0
@@ -23,10 +25,16 @@ var prev_velocity = Vector2.ZERO
 var explode_speed = 400
 export var player_num = ""
 var car_name = ""
+var audio_stream_player = AudioStreamPlayer.new()
 export var _LapObj: NodePath
 onready var LapObj : Node2D = get_node(_LapObj) as Node2D
 
 func _ready():
+	add_child(audio_stream_player)
+	audio_stream_player.stream = Global.engine
+	audio_stream_player.bus = "engineSFX"
+	add_child(audio_stream_player)
+	
 	if player_num == "p1":
 		if Global.CAR_NAME1 == "":
 			queue_free()
@@ -74,9 +82,13 @@ func respawn():
 	rotation_degrees = respawn_point.set_rotation
 	inactive_time = 1.2
 	boosts = 0
+	pitch = 0
+	audio_stream_player.pitch_scale = pitch
 	
 func explode():
 	Global.play_sound(Global.explosion)
+	pitch = 0
+	audio_stream_player.pitch_scale = pitch
 	boosts = 0
 	acceleration = Vector2.ZERO
 	velocity = Vector2.ZERO
@@ -115,7 +127,22 @@ func just_stoped_drifting():
 			return false
 
 func _physics_process(delta):
-	if Global.STARTED:
+	if !Global.STARTED:
+		if audio_stream_player.playing:
+			pitch -= 1 * delta
+		
+		if Input.is_action_pressed("acelerate_" + player_num):
+			if !audio_stream_player.playing:
+				audio_stream_player.play()
+								
+			pitch += 2 * delta
+			if pitch > pitch_max:
+				pitch = pitch_max
+			
+			acceleration = transform.x * (engine_power + engine_boost)
+			
+		audio_stream_player.pitch_scale = pitch
+	else:
 		acceleration = Vector2.ZERO
 		if inactive_time > 0:
 			$sprite.animation = "inactive"
@@ -135,6 +162,7 @@ func _physics_process(delta):
 				$sprite.playing = true
 			
 			if engine_boost > 0:
+				pitch = pitch_max
 				$sprite.playing = true
 				engine_boost -= engine_boost_decrease * delta
 				$TrailParticles.emitting = true
@@ -167,9 +195,20 @@ func _physics_process(delta):
 				rotation_degrees += rotation_speed * delta
 			if Input.is_action_pressed("left_" + player_num):
 				rotation_degrees -= rotation_speed * delta
+				
+			pitch -= 1 * delta
 
 			if Input.is_action_pressed("acelerate_" + player_num) or engine_boost != 0:
+				if !audio_stream_player.playing:
+					audio_stream_player.play()
+									
+				pitch += 2 * delta
+				if pitch > pitch_max:
+					pitch = pitch_max
+				
 				acceleration = transform.x * (engine_power + engine_boost)
+				
+			audio_stream_player.pitch_scale = pitch
 				
 			if Input.is_action_pressed("brake_" + player_num):
 				if drifting_time <= 0:

@@ -103,5 +103,13 @@ func _physics_process(delta):
 				$lbl_enter.visible = !$lbl_enter.visible
 			
 			if Input.is_action_pressed("acelerate_p" + player_num):
+				if player_num == "1":
+					Global.play_sound(Global.one)
+				if player_num == "2":
+					Global.play_sound(Global.two)
+				if player_num == "3":
+					Global.play_sound(Global.three)
+				if player_num == "4":
+					Global.play_sound(Global.four)
 				active = true
 				Global.PlayersJoined += 1
