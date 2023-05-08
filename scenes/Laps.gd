@@ -15,15 +15,15 @@ func _physics_process(delta):
 		$Timer.text = str(tim).pad_decimals(1)
 
 func add_lap(car_name):
-	count += 1
-	if count == Global.TOTAL_LAPS:
-		Global.STARTED = false
-		Global.end_race(car_name, color)
-	
+	count += 1	
 	if Global.STARTED and count > 0:
 		$ItemList.add_item(str(count) + ". " +  $Timer.text)
 		tim = 0.0
 		$Label.text = str(count + 1)
+		
+	if count == Global.TOTAL_LAPS:
+		Global.STARTED = false
+		Global.end_race(car_name, color)
 
 func dec_lap(car_name):
 	tim = 0.0

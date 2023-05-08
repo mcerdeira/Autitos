@@ -100,7 +100,25 @@ zoom = Vector2( 1.5, 1.5 )
 [node name="carB" parent="." instance=ExtResource( 1 )]
 position = Vector2( 162, -125 )
 color = Color( 1, 0, 0, 1 )
-car_name = "Red"
+player_num = "p1"
+_LapObj = NodePath("../Label2/Laps")
+
+[node name="carB2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 162, -91 )
+color = Color( 0, 0, 1, 1 )
+player_num = "p2"
+_LapObj = NodePath("../Label2/Laps")
+
+[node name="carB3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 162, -57 )
+color = Color( 0, 1, 0, 1 )
+player_num = "p3"
+_LapObj = NodePath("../Label2/Laps")
+
+[node name="carB4" parent="." instance=ExtResource( 1 )]
+position = Vector2( 162, -22 )
+color = Color( 1, 1, 0, 1 )
+player_num = "p4"
 _LapObj = NodePath("../Label2/Laps")
 
 [node name="ExplodeCheckpoint" parent="." instance=ExtResource( 3 )]

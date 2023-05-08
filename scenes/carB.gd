@@ -21,11 +21,37 @@ var drag = -0.001
 var respawn_point = Vector2.ZERO
 var prev_velocity = Vector2.ZERO
 var explode_speed = 400
-export var car_name = ""
+export var player_num = ""
+var car_name = ""
 export var _LapObj: NodePath
 onready var LapObj : Node2D = get_node(_LapObj) as Node2D
 
 func _ready():
+	if player_num == "p1":
+		if Global.CAR_NAME1 == "":
+			queue_free()
+			return 
+		
+		car_name = Global.CAR_NAME1
+	if player_num == "p2":
+		if Global.CAR_NAME2 == "":
+			queue_free()
+			return 
+		
+		car_name = Global.CAR_NAME2
+	if player_num == "p3":
+		if Global.CAR_NAME3 == "":
+			queue_free()
+			return 
+		
+		car_name = Global.CAR_NAME3
+	if player_num == "p4":
+		if Global.CAR_NAME4 == "":
+			queue_free()
+			return 
+		
+		car_name = Global.CAR_NAME4
+		
 	trail_visible(false)
 	$TrailParticles.emitting = false
 	add_to_group("cars")
@@ -69,21 +95,21 @@ func apply_friction(debuff = 0):
 	acceleration += drag_force + friction_force
 	
 func trail_visible(_visible, normalbrake = true):
-	if _visible and !normalbrake:
+	if boosts <= 0 and _visible and !normalbrake:
 		Global.play_sound(Global.boost_snd)
 		boosts = 1
 	$Trail_Point1/Trail.restart(_visible)
 	$Trail_Point2/Trail.restart(_visible)
 	
 func drifting():
-	if Input.is_action_pressed("right") or Input.is_action_pressed("left"):
-		if velocity.length() > 250 and Input.is_action_pressed("acelerate") and Input.is_action_pressed("brake"):
+	if Input.is_action_pressed("right_" + player_num) or Input.is_action_pressed("left_" + player_num):
+		if velocity.length() > 250 and Input.is_action_pressed("acelerate_" + player_num) and Input.is_action_pressed("brake_" + player_num):
 			return true
 			
 	return false
 	
 func just_stoped_drifting():
-		if Input.is_action_just_released("right") or Input.is_action_just_released("left") or Input.is_action_just_released("acelerate") or Input.is_action_just_released("brake"):
+		if Input.is_action_just_released("right_" + player_num) or Input.is_action_just_released("left_" + player_num) or Input.is_action_just_released("acelerate_" + player_num) or Input.is_action_just_released("brake_" + player_num):
 			return true
 		else:
 			return false
@@ -119,7 +145,7 @@ func _physics_process(delta):
 					engine_boost = 0
 					dash_pos = []
 			
-			if boosts > 0 and engine_boost <= 0 and Input.is_action_just_pressed("boost"):
+			if boosts > 0 and engine_boost <= 0 and Input.is_action_just_pressed("boost_" + player_num):
 				engine_boost = engine_boost_total
 				boosts -= 1
 				
@@ -137,15 +163,15 @@ func _physics_process(delta):
 			else:
 				trail_visible(false)
 				
-			if Input.is_action_pressed("right"):
+			if Input.is_action_pressed("right_" + player_num):
 				rotation_degrees += rotation_speed * delta
-			if Input.is_action_pressed("left"):
+			if Input.is_action_pressed("left_" + player_num):
 				rotation_degrees -= rotation_speed * delta
 
-			if Input.is_action_pressed("acelerate") or engine_boost != 0:
+			if Input.is_action_pressed("acelerate_" + player_num) or engine_boost != 0:
 				acceleration = transform.x * (engine_power + engine_boost)
 				
-			if Input.is_action_pressed("brake"):
+			if Input.is_action_pressed("brake_" + player_num):
 				if drifting_time <= 0:
 					#double friction by braking
 					apply_friction()

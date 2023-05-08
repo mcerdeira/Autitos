@@ -1,0 +1,89 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scenes/PlayerSlot.gd" type="Script" id=1]
+[ext_resource path="res://fonts/prstartk.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=2]
+size = 24
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=1]
+size = 32
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 24
+font_data = ExtResource( 2 )
+
+[node name="PlayerSlot" type="Node2D"]
+script = ExtResource( 1 )
+player_num = "p1"
+
+[node name="background" type="ColorRect" parent="."]
+margin_right = 512.0
+margin_bottom = 300.0
+rect_pivot_offset = Vector2( 608, 207 )
+color = Color( 1, 0, 0, 1 )
+
+[node name="lbl_join" type="Label" parent="."]
+visible = false
+margin_left = 42.0
+margin_top = 105.0
+margin_right = 306.0
+margin_bottom = 129.0
+custom_fonts/font = SubResource( 2 )
+text = "ENTER NAME:"
+
+[node name="lbl_player" type="Label" parent="."]
+visible = false
+margin_left = 21.0
+margin_top = 16.0
+margin_right = 181.0
+margin_bottom = 32.0
+custom_fonts/font = SubResource( 1 )
+text = "PLAYER 1: "
+
+[node name="lbl_enter" type="Label" parent="."]
+margin_left = 75.0
+margin_top = 131.0
+margin_right = 435.0
+margin_bottom = 155.0
+custom_fonts/font = SubResource( 2 )
+text = "PRESS TO JOIN!!"
+
+[node name="lbl_ready" type="Label" parent="."]
+visible = false
+margin_left = 75.0
+margin_top = 251.0
+margin_right = 435.0
+margin_bottom = 275.0
+custom_fonts/font = SubResource( 2 )
+text = "[READY]"
+align = 1
+
+[node name="char_1" type="Label" parent="."]
+visible = false
+margin_left = 318.0
+margin_top = 105.0
+margin_right = 342.0
+margin_bottom = 129.0
+custom_fonts/font = SubResource( 3 )
+text = "A"
+
+[node name="char_2" type="Label" parent="."]
+visible = false
+margin_left = 349.0
+margin_top = 105.0
+margin_right = 373.0
+margin_bottom = 129.0
+custom_fonts/font = SubResource( 3 )
+text = "A"
+
+[node name="char_3" type="Label" parent="."]
+visible = false
+margin_left = 379.0
+margin_top = 105.0
+margin_right = 403.0
+margin_bottom = 129.0
+custom_fonts/font = SubResource( 3 )
+text = "A"

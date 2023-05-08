@@ -20,7 +20,7 @@ func _on_Semaphore_animation_finished():
 func _on_Semaphore_frame_changed():
 	if $Label2/Semaphore.frame == 2:
 		Global.play_sound(Global.bip_low2)
-	if $Label2/Semaphore.frame == 5:
+	if $Label2/Semaphore.frame == 4:
 		Global.play_sound(Global.bip_low)
 	if $Label2/Semaphore.frame == 6:
 		Global.play_sound(Global.bip_high)
