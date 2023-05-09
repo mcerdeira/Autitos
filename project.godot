@@ -11,7 +11,10 @@ config_version=4
 [application]
 
 config/name="C:\\Datos\\Personal\\Godot\\proyectos\\autitos"
-run/main_scene="res://scenes/PlayerSelect.tscn"
+run/main_scene="res://scenes/Title.tscn"
+boot_splash/show_image=false
+boot_splash/fullsize=false
+boot_splash/use_filter=false
 config/icon="res://icon.png"
 
 [autoload]
@@ -131,7 +134,7 @@ toggle_fullscreen={
 }
 boost_p2={
 "deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":82,"unicode":0,"echo":false,"script":null)
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":70,"unicode":0,"echo":false,"script":null)
  ]
 }
 acelerate_p3={
@@ -189,6 +192,11 @@ boost_p3={
 boost_p4={
 "deadzone": 0.5,
 "events": [  ]
+}
+restart={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":82,"unicode":0,"echo":false,"script":null)
+ ]
 }
 
 [physics]

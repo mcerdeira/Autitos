@@ -10,7 +10,6 @@ var cursor = [0, 0, 0]
 var cursor_pos = 0
 
 func _ready():
-	Music.play(Global.MainTheme)
 	$lbl_player.text = "PLAYER " + player_num + ":"
 	$background.color = color
 	
@@ -51,6 +50,8 @@ func _physics_process(delta):
 			if !done and Input.is_action_just_pressed("acelerate_p" + player_num):
 				done = true
 				Global.play_sound(Global.boost_snd)
+				yield(get_tree().create_timer(0.5), "timeout")
+				Global.play_sound(Global.ready)
 			
 			if Input.is_action_just_pressed("left_p" + player_num):
 				cursor_pos -= 1
@@ -102,7 +103,7 @@ func _physics_process(delta):
 			
 				$lbl_enter.visible = !$lbl_enter.visible
 			
-			if Input.is_action_pressed("acelerate_p" + player_num):
+			if Input.is_action_just_pressed("acelerate_p" + player_num):
 				if player_num == "1":
 					Global.play_sound(Global.one)
 				if player_num == "2":

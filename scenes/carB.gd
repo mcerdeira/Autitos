@@ -87,6 +87,7 @@ func respawn():
 	
 func explode():
 	Global.play_sound(Global.explosion)
+	audio_stream_player.stop()
 	pitch = 0
 	audio_stream_player.pitch_scale = pitch
 	boosts = 0

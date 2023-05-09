@@ -19,11 +19,16 @@ var boost_snd = null
 var drift_snd = null
 var MainTheme = null
 var you_win = null
+var ready = null
+var gamename = null
 var PlayersJoined = 0
 var players = []
 
 func _input(event):
 	var cur_scene = get_tree().current_scene.name
+	if event.is_action_pressed("restart"):
+		get_tree().change_scene("res://scenes/Title.tscn")
+		
 	if cur_scene == "TitleScreen":
 		if event.is_action_pressed("quit_game"):
 			get_tree().quit()
@@ -54,7 +59,9 @@ func loadSfx():
 	three = preload("res://sfx/3.ogg")
 	four = preload("res://sfx/4.ogg")
 	engine = preload("res://sfx/engine.wav")
-
+	ready = preload("res://sfx/ready.ogg")
+	gamename = preload("res://sfx/gamename.wav")
+	
 func play_sound(stream: AudioStream, options:= {}) -> AudioStreamPlayer:
 	var audio_stream_player = AudioStreamPlayer.new()
 
