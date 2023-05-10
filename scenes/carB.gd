@@ -1,5 +1,7 @@
 extends KinematicBody2D
 export var color: Color
+var fake_brake = 0
+var boost_start_value = 0
 var bump_played = false
 var boosts = 0
 var inactive_time = 0
@@ -138,15 +140,33 @@ func _physics_process(delta):
 				pitch = 0
 		
 		if Input.is_action_pressed("acelerate_" + player_num):
+			boost_start_value += 1 * delta
+			
 			if !audio_stream_player.playing:
 				audio_stream_player.play()
 								
 			pitch += 2 * delta
 			if pitch > pitch_max:
 				pitch = pitch_max
+		else:
+			boost_start_value -= 1 * delta
+			if boost_start_value <= 0:
+				boost_start_value = 0
 			
 		audio_stream_player.pitch_scale = pitch
 	else:
+		if boost_start_value > 0 and boost_start_value > 1.6 and boost_start_value <= 1.9:
+			#GOOD!
+			boost_start_value = 0
+			engine_boost = engine_boost_total
+		
+		if boost_start_value >= 2.7:
+			#BAD
+			Global.play_sound(Global.drift_snd)
+			trail_visible(true, true)
+			boost_start_value = 0
+			fake_brake = 2.1
+		
 		acceleration = Vector2.ZERO
 		if inactive_time > 0:
 			$sprite.animation = "inactive"
@@ -168,11 +188,11 @@ func _physics_process(delta):
 			if engine_boost > 0:
 				pitch = pitch_max
 				if !$TrailParticles.emitting:
+					$TrailParticles.emitting = true
 					Global.play_sound(Global.explosion)
 					
 				$sprite.playing = true
 				engine_boost -= engine_boost_decrease * delta
-				$TrailParticles.emitting = true
 				pitch = pitch_max * 2
 				if engine_boost <= 0:
 					$TrailParticles.emitting = false
@@ -197,7 +217,8 @@ func _physics_process(delta):
 				Global.play_sound(Global.drift_snd)
 				trail_visible(true, false)
 			else:
-				trail_visible(false)
+				if fake_brake <= 0:
+					trail_visible(false)
 				
 			if Input.is_action_pressed("right_" + player_num):
 				rotation_degrees += rotation_speed * delta
@@ -221,7 +242,17 @@ func _physics_process(delta):
 				
 			audio_stream_player.pitch_scale = pitch
 				
-			if Input.is_action_pressed("brake_" + player_num):
+			if fake_brake > 0 or  Input.is_action_pressed("brake_" + player_num):
+				if fake_brake > 0:
+					rotation_degrees += rand_range(-4, 4)
+					Global.play_sound(Global.drift_snd)
+					fake_brake -= 1 * delta
+					trail_visible(true, true)
+					if randi() % 10 == 0:
+						Global.play_sound(Global.drift_snd)
+					if fake_brake <= 0:
+						trail_visible(false)
+					
 				if drifting_time <= 0:
 					#double friction by braking
 					apply_friction()

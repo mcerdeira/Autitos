@@ -44,6 +44,7 @@ func _input(event):
 			OS.window_fullscreen = !OS.window_fullscreen
 			
 func init():
+	STARTED = false
 	CAR_NAME1 = ""
 	CAR_NAME2 = ""
 	CAR_NAME3 = ""
