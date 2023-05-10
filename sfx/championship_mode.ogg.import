@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/championship_mode.ogg-9ea36ed0d7c288e1fcddd8d1a6e4069e.oggstr"
+
+[deps]
+
+source_file="res://sfx/championship_mode.ogg"
+dest_files=[ "res://.import/championship_mode.ogg-9ea36ed0d7c288e1fcddd8d1a6e4069e.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
