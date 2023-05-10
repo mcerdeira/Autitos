@@ -12,22 +12,22 @@ font_data = ExtResource( 2 )
 script = ExtResource( 3 )
 
 [node name="PlayerSlot" parent="." instance=ExtResource( 1 )]
-color = Color( 1, 0, 0, 1 )
+color = Color( 1, 0.0117647, 0.364706, 1 )
 player_num = "1"
 
 [node name="PlayerSlot2" parent="." instance=ExtResource( 1 )]
 position = Vector2( 512, 0 )
-color = Color( 0, 0, 1, 1 )
+color = Color( 0.0117647, 1, 0.996078, 1 )
 player_num = "2"
 
 [node name="PlayerSlot3" parent="." instance=ExtResource( 1 )]
 position = Vector2( 0, 300 )
-color = Color( 0, 1, 0, 1 )
+color = Color( 0.364706, 0.929412, 0.364706, 1 )
 player_num = "3"
 
 [node name="PlayerSlot4" parent="." instance=ExtResource( 1 )]
 position = Vector2( 512, 300 )
-color = Color( 1, 1, 0, 1 )
+color = Color( 0.690196, 0.278431, 0.803922, 1 )
 player_num = "4"
 
 [node name="timer" type="Label" parent="."]

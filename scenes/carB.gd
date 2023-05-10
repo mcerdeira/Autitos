@@ -1,6 +1,6 @@
 extends KinematicBody2D
 export var color: Color
-var dash_pos = []
+var bump_played = false
 var boosts = 0
 var inactive_time = 0
 var rotation_speed_boost = 160
@@ -9,7 +9,7 @@ var rotation_speed = rotation_speed_original
 var drifting_time = 0
 var drifting_time_total = 0.6
 var pitch = 0
-var pitch_max = 2.3
+var pitch_max = 2
 
 var engine_power = 650
 var engine_boost = 0
@@ -22,19 +22,14 @@ var friction = -0.9
 var drag = -0.001
 var respawn_point = Vector2.ZERO
 var prev_velocity = Vector2.ZERO
-var explode_speed = 400
+var explode_speed = 425
 export var player_num = ""
 var car_name = ""
 var audio_stream_player = AudioStreamPlayer.new()
 export var _LapObj: NodePath
 onready var LapObj : Node2D = get_node(_LapObj) as Node2D
 
-func _ready():
-	add_child(audio_stream_player)
-	audio_stream_player.stream = Global.engine
-	audio_stream_player.bus = "engineSFX"
-	add_child(audio_stream_player)
-	
+func _ready():	
 	if player_num == "p1":
 		if Global.CAR_NAME1 == "":
 			queue_free()
@@ -59,6 +54,11 @@ func _ready():
 			return 
 		
 		car_name = Global.CAR_NAME4
+		
+	add_child(audio_stream_player)
+	audio_stream_player.stream = Global.engine
+	audio_stream_player.bus = "engineSFX" + player_num
+	add_child(audio_stream_player)
 		
 	trail_visible(false)
 	$TrailParticles.emitting = false
@@ -126,11 +126,16 @@ func just_stoped_drifting():
 			return true
 		else:
 			return false
+			
+func is_a_car(name):
+	return (name == "carB" or name == "carB2" or name == "carB3" or name == "carB4")
 
 func _physics_process(delta):
 	if !Global.STARTED:
 		if audio_stream_player.playing:
 			pitch -= 1 * delta
+			if pitch <= 0:
+				pitch = 0
 		
 		if Input.is_action_pressed("acelerate_" + player_num):
 			if !audio_stream_player.playing:
@@ -139,8 +144,6 @@ func _physics_process(delta):
 			pitch += 2 * delta
 			if pitch > pitch_max:
 				pitch = pitch_max
-			
-			acceleration = transform.x * (engine_power + engine_boost)
 			
 		audio_stream_player.pitch_scale = pitch
 	else:
@@ -164,15 +167,19 @@ func _physics_process(delta):
 			
 			if engine_boost > 0:
 				pitch = pitch_max
+				if !$TrailParticles.emitting:
+					Global.play_sound(Global.explosion)
+					
 				$sprite.playing = true
 				engine_boost -= engine_boost_decrease * delta
 				$TrailParticles.emitting = true
+				pitch = pitch_max * 2
 				if engine_boost <= 0:
 					$TrailParticles.emitting = false
 					$sprite.playing = false
 					$sprite.frame = 0
+					pitch = pitch_max
 					engine_boost = 0
-					dash_pos = []
 			
 			if boosts > 0 and engine_boost <= 0 and Input.is_action_just_pressed("boost_" + player_num):
 				engine_boost = engine_boost_total
@@ -198,14 +205,17 @@ func _physics_process(delta):
 				rotation_degrees -= rotation_speed * delta
 				
 			pitch -= 1 * delta
+			if pitch <= 0:
+				pitch = 0
 
 			if Input.is_action_pressed("acelerate_" + player_num) or engine_boost != 0:
 				if !audio_stream_player.playing:
 					audio_stream_player.play()
 									
-				pitch += 2 * delta
-				if pitch > pitch_max:
-					pitch = pitch_max
+				if engine_boost <=0:
+					pitch += 2 * delta
+					if pitch > pitch_max:
+						pitch = pitch_max
 				
 				acceleration = transform.x * (engine_power + engine_boost)
 				
@@ -228,8 +238,34 @@ func _physics_process(delta):
 			prev_velocity = velocity
 			velocity = move_and_slide(velocity)
 		
-			if get_slide_count() > 0 and prev_velocity.length() > explode_speed:
-				explode()
+			if get_slide_count() > 0:
+				var col = get_slide_collision(0)
+				if is_a_car(col.collider.name):
+					if !bump_played:
+						
+						var collision = col
+						if collision:
+							var other_body = collision.collider
+							var push_direction = collision.normal.normalized()
+							var push_force = velocity.length()
+							var my_push = push_direction * push_force * delta
+							var other_push = -push_direction * push_force * delta
+							move_and_collide(my_push)
+							other_body.move_and_collide(other_push)
+
+						rotation_degrees += rand_range(-1, 1)
+						bump_played = true
+						Global.play_sound(Global.bump)
+				
+				elif prev_velocity.length() > explode_speed:
+					bump_played = false
+					explode()
+				else:
+					if !bump_played:
+						bump_played = true
+						Global.play_sound(Global.bump)
+			else:
+				bump_played = false
 
 func _on_sprite_animation_finished():
 	if $sprite.animation == "explode":

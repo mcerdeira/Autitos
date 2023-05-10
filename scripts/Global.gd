@@ -17,6 +17,7 @@ var bip_high = null
 var explosion = null
 var boost_snd = null
 var drift_snd = null
+var bump = null
 var MainTheme = null
 var you_win = null
 var ready = null
@@ -27,14 +28,29 @@ var players = []
 func _input(event):
 	var cur_scene = get_tree().current_scene.name
 	if event.is_action_pressed("restart"):
-		get_tree().change_scene("res://scenes/Title.tscn")
-		
-	if cur_scene == "TitleScreen":
-		if event.is_action_pressed("quit_game"):
+		if cur_scene == "Main":
+			STARTED = false
+			get_tree().change_scene("res://scenes/Main.tscn")
+
+	if event.is_action_pressed("quit_game"):
+		if cur_scene == "Title":
 			get_tree().quit()
+		else:
+			init()
+			get_tree().change_scene("res://scenes/Title.tscn")
+		
 	else:
 		if event.is_action_pressed("toggle_fullscreen"):
 			OS.window_fullscreen = !OS.window_fullscreen
+			
+func init():
+	CAR_NAME1 = ""
+	CAR_NAME2 = ""
+	CAR_NAME3 = ""
+	CAR_NAME4 = ""
+	winner_label = null
+	PlayersJoined = 0
+	players = []
 
 func end_race(car_name, color):
 	Global.play_sound(Global.you_win)
@@ -43,6 +59,7 @@ func end_race(car_name, color):
 	winner_label.visible = true
 
 func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	loadSfx()
 	
 func loadSfx():
@@ -61,6 +78,7 @@ func loadSfx():
 	engine = preload("res://sfx/engine.wav")
 	ready = preload("res://sfx/ready.ogg")
 	gamename = preload("res://sfx/gamename.wav")
+	bump = preload("res://sfx/bump.wav")
 	
 func play_sound(stream: AudioStream, options:= {}) -> AudioStreamPlayer:
 	var audio_stream_player = AudioStreamPlayer.new()
