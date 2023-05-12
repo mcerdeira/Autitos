@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://scenes/carB.tscn" type="PackedScene" id=1]
 [ext_resource path="res://sprites/track.png" type="Texture" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://scenes/Boxes.tscn" type="PackedScene" id=14]
 [ext_resource path="res://sprites/track2.png" type="Texture" id=15]
 [ext_resource path="res://sprites/track3.png" type="Texture" id=16]
+[ext_resource path="res://scenes/carHUD.tscn" type="PackedScene" id=17]
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
 points = PoolVector2Array( 16, 16, 0.000427246, 16, 0.000427246, 0, 16, 0 )
@@ -162,10 +163,10 @@ color = Color( 0.690196, 0.278431, 0.803922, 1 )
 position = Vector2( 196, -6 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( -225, -164 )
+position = Vector2( -489, -307 )
 anchor_mode = 0
 current = true
-zoom = Vector2( 1.5, 1.5 )
+zoom = Vector2( 2, 2 )
 
 [node name="carB" parent="." instance=ExtResource( 1 )]
 position = Vector2( 162, -125 )
@@ -329,6 +330,22 @@ custom_fonts/font = SubResource( 5 )
 text = "WINNER!!!"
 align = 1
 script = ExtResource( 13 )
+
+[node name="carHUD" parent="." instance=ExtResource( 17 )]
+position = Vector2( -76, 743 )
+_CarObj = NodePath("../carB")
+
+[node name="carHUD2" parent="." instance=ExtResource( 17 )]
+position = Vector2( 235, 743 )
+_CarObj = NodePath("../carB2")
+
+[node name="carHUD3" parent="." instance=ExtResource( 17 )]
+position = Vector2( 547, 743 )
+_CarObj = NodePath("../carB3")
+
+[node name="carHUD4" parent="." instance=ExtResource( 17 )]
+position = Vector2( 859, 743 )
+_CarObj = NodePath("../carB4")
 
 [connection signal="animation_finished" from="Label2/Semaphore" to="." method="_on_Semaphore_animation_finished"]
 [connection signal="frame_changed" from="Label2/Semaphore" to="." method="_on_Semaphore_frame_changed"]

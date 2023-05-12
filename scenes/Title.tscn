@@ -163,7 +163,7 @@ tracks/3/keys = {
 "times": PoolRealArray( 1.2, 3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( -139.035, 438.102 ), Vector2( 1300, 438.102 ) ]
+"values": [ Vector2( -80, 438.102 ), Vector2( 1300, 438.102 ) ]
 }
 
 [node name="Title" type="Node2D"]
@@ -178,7 +178,7 @@ color = Color( 0.0470588, 0, 0.0941176, 1 )
 
 [node name="Car2" type="Sprite" parent="."]
 material = SubResource( 4 )
-position = Vector2( -151.395, 302.102 )
+position = Vector2( -151.396, 302.102 )
 rotation = -1.34914
 scale = Vector2( 3, 3 )
 texture = ExtResource( 2 )
@@ -199,7 +199,7 @@ texture = ExtResource( 2 )
 
 [node name="Car4" type="Sprite" parent="."]
 material = SubResource( 8 )
-position = Vector2( 20.8582, 438.102 )
+position = Vector2( -80, 438.102 )
 rotation = -1.34914
 scale = Vector2( 3, 3 )
 texture = ExtResource( 2 )
