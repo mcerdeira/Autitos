@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Moto Psycho.mp3-87d7a57c11aebf19a2d2763a7ee3d9d1.mp3str"
+
+[deps]
+
+source_file="res://music/Moto Psycho.mp3"
+dest_files=[ "res://.import/Moto Psycho.mp3-87d7a57c11aebf19a2d2763a7ee3d9d1.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

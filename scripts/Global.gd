@@ -18,6 +18,7 @@ var explosion = null
 var boost_snd = null
 var drift_snd = null
 var bump = null
+var RacingTheme = []
 var MainTheme = null
 var you_win = null
 var ready = null
@@ -63,6 +64,16 @@ func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	loadSfx()
 	
+func pick_random(container):
+	if typeof(container) == TYPE_DICTIONARY:
+		return container.values()[randi() % container.size() ]
+	assert( typeof(container) in [
+			TYPE_ARRAY, TYPE_COLOR_ARRAY, TYPE_INT_ARRAY,
+			TYPE_RAW_ARRAY, TYPE_REAL_ARRAY, TYPE_STRING_ARRAY,
+			TYPE_VECTOR2_ARRAY, TYPE_VECTOR3_ARRAY
+			], "ERROR: pick_random" )
+	return container[randi() % container.size()]
+	
 func loadSfx():
 	bip_low = preload("res://sfx/biplow.wav")
 	bip_low2 = preload("res://sfx/biplow.wav")
@@ -80,6 +91,7 @@ func loadSfx():
 	ready = preload("res://sfx/ready.ogg")
 	gamename = preload("res://sfx/gamename.wav")
 	bump = preload("res://sfx/bump.wav")
+	RacingTheme.append(preload("res://music/Moto Psycho.mp3"))
 	
 func play_sound(stream: AudioStream, options:= {}) -> AudioStreamPlayer:
 	var audio_stream_player = AudioStreamPlayer.new()

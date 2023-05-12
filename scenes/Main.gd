@@ -17,6 +17,8 @@ func _on_Semaphore_animation_finished():
 	$Label2/Semaphore.playing = false
 	$Label2/Semaphore.visible = false
 	Global.STARTED = true
+	var theme = Global.pick_random(Global.RacingTheme)
+	Music.play(theme)
 
 func _on_Semaphore_frame_changed():
 	if $Label2/Semaphore.frame == 2:

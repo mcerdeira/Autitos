@@ -106,6 +106,10 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
 } ]
 3/z_index = 0
 
+[sub_resource type="DynamicFont" id=5]
+size = 48
+font_data = ExtResource( 6 )
+
 [sub_resource type="DynamicFont" id=3]
 size = 40
 font_data = ExtResource( 6 )
@@ -117,10 +121,6 @@ animations = [ {
 "name": "default",
 "speed": 5.0
 } ]
-
-[sub_resource type="DynamicFont" id=5]
-size = 48
-font_data = ExtResource( 6 )
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 8 )
@@ -286,6 +286,16 @@ visible = false
 position = Vector2( -121, 130 )
 set_rotation = 270
 
+[node name="lbl_winner" type="Label" parent="."]
+visible = false
+margin_top = 189.0
+margin_right = 1053.0
+margin_bottom = 237.0
+custom_fonts/font = SubResource( 5 )
+text = "WINNER!!!"
+align = 1
+script = ExtResource( 13 )
+
 [node name="Label2" type="Label" parent="."]
 margin_left = 380.0
 margin_top = 315.0
@@ -320,16 +330,6 @@ playernum = "p3"
 position = Vector2( 328, 80 )
 color = Color( 0.690196, 0.278431, 0.803922, 1 )
 playernum = "p4"
-
-[node name="lbl_winner" type="Label" parent="."]
-visible = false
-margin_top = 189.0
-margin_right = 1053.0
-margin_bottom = 205.0
-custom_fonts/font = SubResource( 5 )
-text = "WINNER!!!"
-align = 1
-script = ExtResource( 13 )
 
 [node name="carHUD" parent="." instance=ExtResource( 17 )]
 position = Vector2( -76, 743 )

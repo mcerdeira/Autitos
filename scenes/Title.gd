@@ -1,6 +1,9 @@
 extends Node2D
 var next = false
 
+func _ready():
+	Music.stop()
+
 func _input(event):
 	if event.is_action_pressed("acelerate_p1") or event.is_action_pressed("acelerate_p2") or event.is_action_pressed("acelerate_p3") or event.is_action_pressed("acelerate_p4"):
 		go_next(true)
