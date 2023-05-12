@@ -2,6 +2,7 @@ extends Node2D
 var ttl = 0.2
 
 func _ready():
+	Music.stop()
 	$lbl_winner.visible = false
 	$Label2.text = "LAPS: " + str(Global.TOTAL_LAPS)
 	$Label2.visible = true

@@ -24,7 +24,7 @@ var friction = -0.9
 var drag = -0.001
 var respawn_point = Vector2.ZERO
 var prev_velocity = Vector2.ZERO
-var explode_speed = 425
+var explode_speed = 425.0
 export var player_num = ""
 var car_name = ""
 var audio_stream_player = AudioStreamPlayer.new()
@@ -118,7 +118,7 @@ func trail_visible(_visible, normalbrake = true):
 	
 func drifting():
 	if Input.is_action_pressed("right_" + player_num) or Input.is_action_pressed("left_" + player_num):
-		if velocity.length() > 250 and Input.is_action_pressed("acelerate_" + player_num) and Input.is_action_pressed("brake_" + player_num):
+		if velocity.length() >= (explode_speed / 2.0) and Input.is_action_pressed("acelerate_" + player_num) and Input.is_action_pressed("brake_" + player_num):
 			return true
 			
 	return false
