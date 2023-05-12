@@ -40,22 +40,22 @@ margin_bottom = 66.0
 custom_fonts/font = SubResource( 1 )
 text = "TURBO:"
 
-[node name="lbl_fuel" type="Label" parent="."]
+[node name="lbl_tires" type="Label" parent="."]
 margin_left = 15.0
 margin_top = 79.0
 margin_right = 111.0
 margin_bottom = 95.0
 custom_fonts/font = SubResource( 1 )
-text = " FUEL:"
+text = "TIRES:"
 
 [node name="turbo_bar" type="ColorRect" parent="."]
 margin_left = 163.0
 margin_top = 50.0
-margin_right = 288.0
+margin_right = 263.0
 margin_bottom = 72.0
 
-[node name="fuel_bar" type="ColorRect" parent="."]
+[node name="tires_bar" type="ColorRect" parent="."]
 margin_left = 163.0
 margin_top = 78.0
-margin_right = 288.0
+margin_right = 263.0
 margin_bottom = 100.0

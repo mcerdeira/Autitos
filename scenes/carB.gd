@@ -1,5 +1,7 @@
 extends KinematicBody2D
 export var color: Color
+var tire_decay = 250.00
+var tires = 100
 var fake_brake = 0
 var boost_start_value = 0
 var bump_played = false
@@ -162,12 +164,17 @@ func _physics_process(delta):
 		
 		if boost_start_value >= 2.7:
 			#BAD
+			hurt_tires(5)
 			Global.play_sound(Global.drift_snd)
 			trail_visible(true, true)
 			boost_start_value = 0
 			fake_brake = 2.1
+			
+		if tires <= 0:
+			fake_brake = 1
 		
 		acceleration = Vector2.ZERO
+				
 		if inactive_time > 0:
 			$sprite.animation = "inactive"
 			$sprite.playing = true
@@ -206,6 +213,7 @@ func _physics_process(delta):
 				boosts -= 1
 				
 			if drifting():
+				hurt_tires((velocity.length() / tire_decay) * delta)
 				drifting_time += 1 * delta
 			else:
 				drifting_time = 0
@@ -243,13 +251,17 @@ func _physics_process(delta):
 			audio_stream_player.pitch_scale = pitch
 				
 			if fake_brake > 0 or  Input.is_action_pressed("brake_" + player_num):
+				hurt_tires((velocity.length() / tire_decay) * delta)
+				
 				if fake_brake > 0:
 					rotation_degrees += rand_range(-4, 4)
-					Global.play_sound(Global.drift_snd)
+					if tires > 0:
+						Global.play_sound(Global.drift_snd)
 					fake_brake -= 1 * delta
 					trail_visible(true, true)
 					if randi() % 10 == 0:
-						Global.play_sound(Global.drift_snd)
+						if tires > 0:
+							Global.play_sound(Global.drift_snd)
 					if fake_brake <= 0:
 						trail_visible(false)
 					
@@ -268,6 +280,8 @@ func _physics_process(delta):
 			velocity += acceleration * delta
 			prev_velocity = velocity
 			velocity = move_and_slide(velocity)
+			
+			hurt_tires((velocity.length() / tire_decay) * delta)
 		
 			if get_slide_count() > 0:
 				var col = get_slide_collision(0)
@@ -290,6 +304,7 @@ func _physics_process(delta):
 				
 				elif prev_velocity.length() > explode_speed:
 					bump_played = false
+					hurt_tires(5)
 					explode()
 				else:
 					if !bump_played:
@@ -297,6 +312,11 @@ func _physics_process(delta):
 						Global.play_sound(Global.bump)
 			else:
 				bump_played = false
+				
+func hurt_tires(amount):
+	tires -= amount
+	if tires <= 0:
+		tires = 0
 
 func _on_sprite_animation_finished():
 	if $sprite.animation == "explode":
