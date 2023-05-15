@@ -1,5 +1,9 @@
 extends Node
 var STARTED = false
+var CAR_AVATAR1 = -1
+var CAR_AVATAR2 = -1
+var CAR_AVATAR3 = -1
+var CAR_AVATAR4 = -1
 var CAR_NAME1 = ""
 var CAR_NAME2 = ""
 var CAR_NAME3 = ""
@@ -17,7 +21,9 @@ var bip_high = null
 var explosion = null
 var boost_snd = null
 var drift_snd = null
+var boxes_snd = null
 var bump = null
+var bip = null
 var RacingTheme = []
 var MainTheme = null
 var you_win = null
@@ -91,6 +97,8 @@ func loadSfx():
 	ready = preload("res://sfx/ready.ogg")
 	gamename = preload("res://sfx/gamename.wav")
 	bump = preload("res://sfx/bump.wav")
+	bip = preload("res://sfx/bip.wav")
+	boxes_snd = preload("res://sfx/boxes.wav")
 	RacingTheme.append(preload("res://music/Moto Psycho.mp3"))
 	
 func play_sound(stream: AudioStream, options:= {}) -> AudioStreamPlayer:

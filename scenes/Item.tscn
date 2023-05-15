@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://fonts/prstartk.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://scenes/Item.gd" type="Script" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+size = 48
+font_data = ExtResource( 1 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 40, 30 )
+
+[node name="Item" type="Node2D"]
+position = Vector2( 1072, 136 )
+script = ExtResource( 2 )
+
+[node name="background" type="ColorRect" parent="."]
+margin_top = 1.0
+margin_right = 80.0
+margin_bottom = 61.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 18.0
+margin_top = 8.0
+margin_right = 66.0
+margin_bottom = 56.0
+rect_pivot_offset = Vector2( 85, 42 )
+custom_fonts/font = SubResource( 1 )
+text = "?"
+
+[node name="area" type="Area2D" parent="."]
+
+[node name="collider" type="CollisionShape2D" parent="area"]
+position = Vector2( 40, 31 )
+shape = SubResource( 2 )
+
+[connection signal="body_exited" from="area" to="." method="_on_area_body_exited"]

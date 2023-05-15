@@ -1,7 +1,23 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scenes/PlayerSlot.gd" type="Script" id=1]
 [ext_resource path="res://fonts/prstartk.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://sprites/playar_avatar.png" type="Texture" id=3]
+[ext_resource path="res://sprites/playar_avatar2.png" type="Texture" id=4]
+[ext_resource path="res://sprites/playar_avatar6.png" type="Texture" id=5]
+[ext_resource path="res://sprites/playar_avatar7.png" type="Texture" id=6]
+[ext_resource path="res://sprites/playar_avatar8.png" type="Texture" id=7]
+[ext_resource path="res://sprites/playar_avatar3.png" type="Texture" id=8]
+[ext_resource path="res://sprites/playar_avatar4.png" type="Texture" id=9]
+[ext_resource path="res://sprites/playar_avatar5.png" type="Texture" id=10]
+
+[sub_resource type="SpriteFrames" id=4]
+animations = [ {
+"frames": [ ExtResource( 4 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
 
 [sub_resource type="DynamicFont" id=2]
 size = 24
@@ -25,12 +41,18 @@ margin_bottom = 300.0
 rect_pivot_offset = Vector2( 608, 207 )
 color = Color( 1, 0, 0, 1 )
 
+[node name="player_avatar" type="AnimatedSprite" parent="."]
+visible = false
+position = Vector2( 93, 107 )
+scale = Vector2( 5, 5 )
+frames = SubResource( 4 )
+
 [node name="lbl_join" type="Label" parent="."]
 visible = false
 margin_left = 42.0
-margin_top = 105.0
+margin_top = 185.0
 margin_right = 306.0
-margin_bottom = 129.0
+margin_bottom = 209.0
 custom_fonts/font = SubResource( 2 )
 text = "ENTER NAME:"
 
@@ -64,26 +86,26 @@ align = 1
 [node name="char_1" type="Label" parent="."]
 visible = false
 margin_left = 318.0
-margin_top = 105.0
+margin_top = 185.0
 margin_right = 342.0
-margin_bottom = 129.0
+margin_bottom = 209.0
 custom_fonts/font = SubResource( 3 )
 text = "A"
 
 [node name="char_2" type="Label" parent="."]
 visible = false
 margin_left = 349.0
-margin_top = 105.0
+margin_top = 185.0
 margin_right = 373.0
-margin_bottom = 129.0
+margin_bottom = 209.0
 custom_fonts/font = SubResource( 3 )
 text = "A"
 
 [node name="char_3" type="Label" parent="."]
 visible = false
 margin_left = 379.0
-margin_top = 105.0
+margin_top = 185.0
 margin_right = 403.0
-margin_bottom = 129.0
+margin_bottom = 209.0
 custom_fonts/font = SubResource( 3 )
 text = "A"

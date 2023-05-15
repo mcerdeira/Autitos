@@ -3,7 +3,7 @@
 [ext_resource path="res://scenes/Boxes.gd" type="Script" id=1]
 
 [sub_resource type="RectangleShape2D" id=6]
-extents = Vector2( 27, 14.5 )
+extents = Vector2( 31, 17.5 )
 
 [node name="Boxes" type="Node2D"]
 script = ExtResource( 1 )
@@ -13,8 +13,25 @@ margin_left = -27.0
 margin_top = -15.0
 margin_right = 27.0
 margin_bottom = 14.0
+color = Color( 0.372549, 0.360784, 0.364706, 1 )
 
 [node name="area" type="Area2D" parent="."]
+visible = false
 
 [node name="collider" type="CollisionShape2D" parent="area"]
+position = Vector2( 1, -0.5 )
 shape = SubResource( 6 )
+
+[node name="col1" type="ColorRect" parent="."]
+margin_left = -27.0
+margin_top = -15.0
+margin_right = 27.0
+margin_bottom = -11.0
+
+[node name="col2" type="ColorRect" parent="."]
+margin_left = -27.0
+margin_top = -15.0
+margin_right = -23.0
+margin_bottom = 14.0
+
+[connection signal="body_entered" from="area" to="." method="_on_area_body_entered"]

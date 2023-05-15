@@ -1,5 +1,6 @@
 extends KinematicBody2D
 export var color: Color
+var in_boxes = false
 var tire_decay = 250.00
 var tires = 100
 var fake_brake = 0
@@ -14,6 +15,7 @@ var drifting_time = 0
 var drifting_time_total = 0.6
 var pitch = 0
 var pitch_max = 2
+var item = ""
 
 var engine_power = 650
 var engine_boost = 0
@@ -59,7 +61,6 @@ func _ready():
 		
 		car_name = Global.CAR_NAME4
 		
-	add_child(audio_stream_player)
 	audio_stream_player.stream = Global.engine
 	audio_stream_player.bus = "engineSFX" + player_num
 	add_child(audio_stream_player)
@@ -69,6 +70,44 @@ func _ready():
 	add_to_group("cars")
 	$sprite.material.set_shader_param("replacement_color", color)
 	
+func has_item():
+	return (item != "" and item != "randomize")
+	
+func do_item_action():
+	item = ""
+	
+	
+func set_item(itm):
+	if itm == 1:
+		item = "ray"
+	if itm == 2:
+		item = "shield"
+	if itm == 3:
+		item = "disc"
+	
+func random_slot_item():
+	if item == "":
+		item = "randomize"
+	
+func boxes(val):
+	velocity = Vector2.ZERO
+	acceleration = Vector2.ZERO
+	rotation_degrees = 0
+	trail_visible(false)
+	$TrailParticles.emitting = false
+	in_boxes = val
+	if !val:
+		tires = 100
+		$tipi1.visible = false
+		$tipi2.visible = false
+		$tipi3.visible = false
+		$tipi4.visible = false
+	else:
+		$tipi1.visible = true
+		$tipi2.visible = true
+		$tipi3.visible = true
+		$tipi4.visible = true
+		
 func add_lap():
 	LapObj.add_lap(car_name)
 	
@@ -90,7 +129,8 @@ func respawn():
 	audio_stream_player.pitch_scale = pitch
 	
 func explode():
-	Global.play_sound(Global.explosion)
+	var options = {"pitch_scale": 0.7}
+	Global.play_sound(Global.explosion, options)
 	audio_stream_player.stop()
 	pitch = 0
 	audio_stream_player.pitch_scale = pitch
@@ -134,6 +174,13 @@ func just_stoped_drifting():
 func is_a_car(name):
 	return (name == "carB" or name == "carB2" or name == "carB3" or name == "carB4")
 
+func do_boost():
+	if boosts > 0 and engine_boost <= 0:
+		if !Input.is_action_pressed("acelerate_" + player_num) and !Input.is_action_pressed("brake_" + player_num):
+			return true
+	
+	return false
+
 func _physics_process(delta):
 	if !Global.STARTED:
 		if audio_stream_player.playing:
@@ -174,6 +221,13 @@ func _physics_process(delta):
 			fake_brake = 1
 		
 		acceleration = Vector2.ZERO
+		
+		if in_boxes:
+			pitch -= 1 * delta
+			if pitch <= 0:
+				pitch = 0
+			audio_stream_player.pitch_scale = pitch
+			return
 				
 		if inactive_time > 0:
 			$sprite.animation = "inactive"
@@ -207,8 +261,8 @@ func _physics_process(delta):
 					$sprite.frame = 0
 					pitch = pitch_max
 					engine_boost = 0
-			
-			if boosts > 0 and engine_boost <= 0 and Input.is_action_just_pressed("boost_" + player_num):
+					
+			if do_boost():
 				engine_boost = engine_boost_total
 				boosts -= 1
 				
@@ -232,6 +286,9 @@ func _physics_process(delta):
 				rotation_degrees += rotation_speed * delta
 			if Input.is_action_pressed("left_" + player_num):
 				rotation_degrees -= rotation_speed * delta
+				
+			if has_item() and Input.is_action_just_pressed("boost_" + player_num):
+				do_item_action()
 				
 			pitch -= 1 * delta
 			if pitch <= 0:
