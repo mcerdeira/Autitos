@@ -5,8 +5,13 @@ var player_num = ""
 var randomizing = 0
 var randomizing_total = 1.2
 var random_item = -1
+var audio_stream_player = AudioStreamPlayer.new()
 
 func _ready():
+	audio_stream_player.stream = Global.boxes_snd
+	audio_stream_player.bus = "BoxesSFX"
+	add_child(audio_stream_player)
+	
 	$lbl_turbo.add_color_override("font_color", Color8(100, 100, 100))
 	$background.color = CarObj.color
 	player_num = CarObj.player_num
@@ -42,9 +47,25 @@ func _physics_process(delta):
 			$lbl_turbo.add_color_override("font_color", Color8(100, 100, 100))
 		
 		if CarObj.item == "randomize" and !$item.playing:
+			if !audio_stream_player.playing:
+				audio_stream_player.play()
+				audio_stream_player.pitch_scale = 1.5
+			
 			randomizing = randomizing_total
 			random_item = -1
 			$item.playing = true
+			
+		if CarObj.item != "" and CarObj.item != "randomize":
+			if audio_stream_player.playing:
+				audio_stream_player.stop()
+		
+		if CarObj.item == "":
+			if audio_stream_player.playing:
+				audio_stream_player.stop()
+			randomizing = randomizing_total
+			random_item = -1
+			$item.frame = 0
+			$item.playing = false
 			
 		if $item.playing:
 			randomizing -= 1 * delta
@@ -52,8 +73,9 @@ func _physics_process(delta):
 				randomizing = randomizing_total
 				random_item = -1
 				$item.playing = false
-				$item.frame = Global.pick_random([1, 2, 3])
+				$item.frame = Global.pick_random([1, 2, 3, 4])
 				CarObj.set_item($item.frame)
+				
 		
 		$speed.text = str(round(CarObj.velocity.length()))
 		$tires_bar.rect_size.x = CarObj.tires

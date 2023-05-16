@@ -1,5 +1,9 @@
 extends KinematicBody2D
 export var color: Color
+var slide = 0
+var slide_total = 2
+var shield_time = 0
+var shield_time_total = 7.5
 var in_boxes = false
 var tire_decay = 250.00
 var tires = 100
@@ -16,6 +20,8 @@ var drifting_time_total = 0.6
 var pitch = 0
 var pitch_max = 2
 var item = ""
+var discObj = preload("res://scenes/Disc.tscn")
+var splatObj = preload("res://scenes/Splat.tscn")
 
 var engine_power = 650
 var engine_boost = 0
@@ -74,8 +80,43 @@ func has_item():
 	return (item != "" and item != "randomize")
 	
 func do_item_action():
-	item = ""
+	if item == "ray":
+		if Global.hand_nodamage == "":
+			do_ray()
+			item = ""
+	if item == "shield":
+		do_shield()
+		item = ""
+	if item == "disc":
+		do_disc()
+		item = ""
+	if item == "splat":
+		do_splat()
+		item = ""
+		
+func do_slide():
+	slide = slide_total
+
+func do_splat():
+	var splat = splatObj.instance()
+	Global.TileObj.add_child(splat)
+	splat.global_position = $splat_position.global_position
+
+func do_ray():
+	if Global.hand_nodamage == "":
+		Global.hand_nodamage = player_num
+		Global.hand_animation.play("New Anim")
 	
+func do_shield():
+	shield_time = shield_time_total
+	
+func do_disc():
+	var disc = discObj.instance()
+	disc.pong_dir = Vector2(cos(rotation), sin(rotation))
+	var root = get_parent()
+	root.add_child(disc)
+	disc.global_position = $disc_position.global_position
+	disc.set_color(color)
 	
 func set_item(itm):
 	if itm == 1:
@@ -84,6 +125,8 @@ func set_item(itm):
 		item = "shield"
 	if itm == 3:
 		item = "disc"
+	if itm == 4:
+		item = "splat"
 	
 func random_slot_item():
 	if item == "":
@@ -241,7 +284,7 @@ func _physics_process(delta):
 			rotation_speed = rotation_speed_boost
 		else:
 			rotation_speed = rotation_speed_original
-		
+			
 		if $sprite.animation == "default" and inactive_time <= 0:
 			if boosts > 0:
 				$sprite.playing = true
@@ -293,6 +336,12 @@ func _physics_process(delta):
 			pitch -= 1 * delta
 			if pitch <= 0:
 				pitch = 0
+				
+			if shield_time > 0:
+				shield_time -= 1 * delta
+				$shield.visible = true
+				if shield_time <= 0:
+					$shield.visible = false
 
 			if Input.is_action_pressed("acelerate_" + player_num) or engine_boost != 0:
 				if !audio_stream_player.playing:
@@ -306,6 +355,18 @@ func _physics_process(delta):
 				acceleration = transform.x * (engine_power + engine_boost)
 				
 			audio_stream_player.pitch_scale = pitch
+			
+			if slide > 0:
+				rotation_degrees += 1000 * delta
+				apply_friction()
+				apply_friction()
+				if randi() % 10 == 0:
+					Global.play_sound(Global.drift_snd)
+					trail_visible(true, true)
+					
+				slide -= 1 * delta
+				if slide <= 0:
+					trail_visible(false)
 				
 			if fake_brake > 0 or  Input.is_action_pressed("brake_" + player_num):
 				hurt_tires((velocity.length() / tire_decay) * delta)
@@ -359,7 +420,7 @@ func _physics_process(delta):
 						bump_played = true
 						Global.play_sound(Global.bump)
 				
-				elif prev_velocity.length() > explode_speed:
+				elif shield_time <= 0 and prev_velocity.length() > explode_speed:
 					bump_played = false
 					hurt_tires(5)
 					explode()

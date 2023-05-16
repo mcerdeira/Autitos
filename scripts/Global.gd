@@ -31,6 +31,10 @@ var ready = null
 var gamename = null
 var PlayersJoined = 0
 var players = []
+var shaker_obj = null
+var TileObj = null
+var hand_animation = null
+var hand_nodamage = ""
 
 func _input(event):
 	var cur_scene = get_tree().current_scene.name

@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scenes/Title.gd" type="Script" id=1]
 [ext_resource path="res://sprites/car.png" type="Texture" id=2]
@@ -166,6 +166,31 @@ tracks/3/keys = {
 "values": [ Vector2( -80, 438.102 ), Vector2( 1300, 438.102 ) ]
 }
 
+[sub_resource type="Shader" id=10]
+code = "shader_type canvas_item;
+
+uniform bool apply = true;
+uniform float amount = 0.1;
+uniform sampler2D offset_texture : hint_white;
+
+void fragment() {
+	vec4 texture_color = texture(SCREEN_TEXTURE, SCREEN_UV);
+	vec4 color = texture_color;
+	
+	if (apply == true) {
+		float adjusted_amount = amount * texture(offset_texture, SCREEN_UV).r / 100.0;
+		color.r = texture(SCREEN_TEXTURE, vec2(SCREEN_UV.x + adjusted_amount, SCREEN_UV.y)).r;
+		color.g = texture(SCREEN_TEXTURE, SCREEN_UV).g;
+		color.b = texture(SCREEN_TEXTURE, vec2(SCREEN_UV.x - adjusted_amount, SCREEN_UV.y)).b;
+	}
+	COLOR = color;
+}"
+
+[sub_resource type="ShaderMaterial" id=11]
+shader = SubResource( 10 )
+shader_param/apply = true
+shader_param/amount = 0.1
+
 [node name="Title" type="Node2D"]
 script = ExtResource( 1 )
 
@@ -211,5 +236,12 @@ texture = ExtResource( 3 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 playback_speed = 2.0
 "anims/New Anim" = SubResource( 9 )
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+material = SubResource( 11 )
+margin_left = -636.0
+margin_top = -445.0
+margin_right = 1705.0
+margin_bottom = 1058.0
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]

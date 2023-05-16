@@ -1,5 +1,6 @@
 extends Node2D
 var ttl = 0.2
+var forward = true
 
 func _ready():
 	Music.stop()
@@ -27,3 +28,18 @@ func _on_Semaphore_frame_changed():
 		Global.play_sound(Global.bip_low)
 	if $Label2/Semaphore.frame == 6:
 		Global.play_sound(Global.bip_high)
+
+func _on_hand_animation_animation_finished(anim_name):
+	if forward:
+		forward = false
+		Global.shaker_obj.shake(10, 2.3)
+		var cars = get_tree().get_nodes_in_group("cars")
+		for c in cars:
+			if c.player_num != Global.hand_nodamage:
+				c.explode()
+		
+		Global.hand_nodamage = ""
+		$hand_animation.play_backwards("New Anim")
+	else:
+		Global.hand_nodamage = ""
+		forward = true
