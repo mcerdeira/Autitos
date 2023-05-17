@@ -226,10 +226,10 @@ color = Color( 0.690196, 0.278431, 0.803922, 1 )
 position = Vector2( 196, -6 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( -489, -307 )
+position = Vector2( -382, -183 )
 anchor_mode = 0
 current = true
-zoom = Vector2( 2, 2 )
+zoom = Vector2( 1.8, 1.8 )
 
 [node name="carB" parent="." instance=ExtResource( 1 )]
 position = Vector2( 162, -125 )
